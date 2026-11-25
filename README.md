@@ -1,16 +1,13 @@
-# Aplikasi Prakiraan Cuaca — Responsi Praktikum Pemrograman Mobile
+# Aplikasi Prakiraan Cuaca (Responsi Praktikum Pemrograman Mobile)
 
 Aplikasi prakiraan cuaca berbasis **Flutter** dan **Dart** yang menyajikan informasi kondisi cuaca terkini serta prakiraan cuaca harian secara *real-time* menggunakan layanan **Open-Meteo REST API**. Aplikasi ini dirancang menggunakan pola arsitektur **Model-View-ViewModel (MVVM)** dengan antarmuka bertema gelap (*Dark Navy & Warm Amber*) berbasis **Material Design**.
 
 ---
 
-## Identitas Mahasiswa
-
 * **Nama:** Reva Albana
 * **NIM:** H1D024080
-* **Nama Proyek:** `responsi_cuaca_h1d024080`
-* **Package Name:** `com.revaalbana.cuaca`
-* **Repository GitHub:** [RevaAlbana/Responsi2-Mobile-H1D024080](https://github.com/RevaAlbana/Responsi2-Mobile-H1D024080)
+* **Shift KRS:** E
+* **Shift Sekarang:** H
 
 ---
 
@@ -149,8 +146,8 @@ GET https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longit
 
 | Home / Weather Screen | Search / Location Screen |
 | :---: | :---: |
-| ![Home Screen](C:\Users\ADVAN\AndroidStudioProjects\responsi_cuaca_H1D024080\screenshots\home_screen.png) | ![Search Screen](C:\Users\ADVAN\AndroidStudioProjects\responsi_cuaca_H1D024080\screenshots\search_screen.png) |
+| ![Home Screen](screenshots/home_screen.png) | ![Search Screen](screenshots/search_screen.png) |
 
 | Lokasi Favorit Tersimpan | Kondisi Error / Jaringan Terputus |
 | :---: | :---: |
-| ![Favorites Screen](C:\Users\ADVAN\AndroidStudioProjects\responsi_cuaca_H1D024080\screenshots\favorites_screen.png) | ![Error State](C:\Users\ADVAN\AndroidStudioProjects\responsi_cuaca_H1D024080\screenshots\error_state.png) |
+| ![Favorites Screen](screenshots/favorites_screen.png) | ![Error State](screenshots/error_state.png) |
