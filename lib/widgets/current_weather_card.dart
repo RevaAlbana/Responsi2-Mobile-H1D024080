@@ -25,102 +25,78 @@ class CurrentWeatherCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0288D1), Color(0xFF01579B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: const Color(0xFF223052),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF0288D1).withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        border: Border.all(
+          color: const Color(0xFF374B7A),
+          width: 1,
+        ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.location_on,
-                color: Colors.white70,
-                size: 20,
-              ),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  location.name,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          if (regionText.isNotEmpty) ...[
-            const SizedBox(height: 2),
+          // Baris Atas: Wilayah & Negara
+          if (regionText.isNotEmpty)
             Text(
               regionText,
               style: const TextStyle(
                 fontSize: 14,
-                color: Colors.white70,
+                color: Color(0xFFB0BDD6),
+                fontWeight: FontWeight.w500,
               ),
-              textAlign: TextAlign.center,
             ),
-          ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
+          // Baris Tengah: Ikon Cuaca + Suhu Utama & Terasa Seperti
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 weatherIcon,
                 size: 64,
-                color: Colors.amberAccent,
+                color: const Color(0xFFF2B66D),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${currentWeather.temperature2m.toStringAsFixed(1)}°C',
+                    '${currentWeather.temperature2m.toStringAsFixed(1)}°',
                     style: const TextStyle(
-                      fontSize: 42,
+                      fontSize: 52,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Color(0xFFF6F1E7),
+                      height: 1.0,
                     ),
                   ),
+                  const SizedBox(height: 4),
                   Text(
                     'Terasa seperti ${currentWeather.apparentTemperature.toStringAsFixed(1)}°C',
                     style: const TextStyle(
                       fontSize: 14,
-                      color: Colors.white70,
+                      color: Color(0xFFB0BDD6),
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+
+          // Baris Bawah: Pill Badge Kondisi Cuaca
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: const Color(0xFF2B3C66),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               weatherDesc,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: Color(0xFFF6F1E7),
               ),
             ),
           ),

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class WeatherCodeMapper {
   static String getDescription(int code) {
@@ -63,49 +64,43 @@ class WeatherCodeMapper {
   static IconData getIcon(int code) {
     switch (code) {
       case 0:
-        return Icons.wb_sunny;
+        return LucideIcons.sun;
       case 1:
-        return Icons.wb_sunny_outlined;
       case 2:
-        return Icons.wb_cloudy;
+        return LucideIcons.cloudSun;
       case 3:
-        return Icons.cloud;
+        return LucideIcons.cloud;
       case 45:
       case 48:
-        return Icons.cloudy_snowing;
+        return LucideIcons.cloudFog;
       case 51:
       case 53:
       case 55:
-        return Icons.grain;
       case 56:
       case 57:
-        return Icons.ac_unit;
+        return LucideIcons.cloudDrizzle;
       case 61:
       case 63:
-        return Icons.water_drop;
       case 65:
-        return Icons.grain;
       case 66:
       case 67:
-        return Icons.ac_unit;
+      case 80:
+      case 81:
+      case 82:
+        return LucideIcons.cloudRain;
       case 71:
       case 73:
       case 75:
       case 77:
-        return Icons.ac_unit;
-      case 80:
-      case 81:
-      case 82:
-        return Icons.umbrella;
       case 85:
       case 86:
-        return Icons.ac_unit;
+        return LucideIcons.cloudSnow;
       case 95:
       case 96:
       case 99:
-        return Icons.thunderstorm;
+        return LucideIcons.cloudLightning;
       default:
-        return Icons.help_outline;
+        return LucideIcons.cloud;
     }
   }
 }

@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/weather_viewmodel.dart';
 
@@ -32,56 +34,138 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onClearSearch(WeatherViewModel viewModel) {
     _searchController.clear();
     viewModel.searchCity('');
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cari Lokasi'),
-      ),
-      body: Consumer<WeatherViewModel>(
-        builder: (context, viewModel, child) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Input Pencarian
-                TextField(
-                  controller: _searchController,
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: (_) => _onSearchSubmitted(viewModel),
-                  decoration: InputDecoration(
-                    hintText: 'Masukkan nama kota (cth: Purwokerto, Jakarta)...',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () => _onClearSearch(viewModel),
-                          )
-                        : IconButton(
-                            icon: const Icon(Icons.arrow_forward),
-                            onPressed: () => _onSearchSubmitted(viewModel),
+      backgroundColor: const Color(0xFF172036),
+      body: SafeArea(
+        child: Consumer<WeatherViewModel>(
+          builder: (context, viewModel, child) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Custom Header: Tombol kembali + Judul
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF223052),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF374B7A),
+                              width: 1,
+                            ),
                           ),
+                          child: const Icon(
+                            LucideIcons.arrowLeft,
+                            color: Color(0xFFF2B66D),
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      const Text(
+                        'Cari lokasi',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFF6F1E7),
+                        ),
+                      ),
+                    ],
                   ),
-                  onChanged: (text) {
-                    setState(() {});
-                  },
-                ),
-                const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
-                // Bagian Lokasi Favorit Tersimpan
-                _buildFavoritesSection(context, viewModel),
+                  // Kolom Input Pencarian Kota
+                  TextField(
+                    controller: _searchController,
+                    style: const TextStyle(color: Color(0xFFF6F1E7)),
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (_) => _onSearchSubmitted(viewModel),
+                    onChanged: (text) {
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xFF223052),
+                      hintText: 'Cari nama kota...',
+                      hintStyle: const TextStyle(color: Color(0xFF8B99B5)),
+                      prefixIcon: const Icon(
+                        LucideIcons.search,
+                        color: Color(0xFFF2B66D),
+                        size: 20,
+                      ),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () => _onClearSearch(viewModel),
+                                child: Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF2B3C66),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    LucideIcons.x,
+                                    size: 14,
+                                    color: Color(0xFFF6F1E7),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF374B7A),
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF374B7A),
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFF2B66D),
+                          width: 1.5,
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 24),
+                  // Bagian Lokasi Favorit
+                  _buildFavoritesSection(context, viewModel),
 
-                // Bagian Hasil Pencarian
-                _buildSearchResultsSection(context, viewModel),
-              ],
-            ),
-          );
-        },
+                  const SizedBox(height: 24),
+
+                  // Bagian Hasil Pencarian
+                  _buildSearchResultsSection(context, viewModel),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -92,29 +176,63 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
-            const Icon(Icons.bookmark, color: Color(0xFF0288D1), size: 20),
-            const SizedBox(width: 8),
+            Icon(
+              LucideIcons.bookmark,
+              color: Color(0xFFF2B66D),
+              size: 18,
+            ),
+            SizedBox(width: 8),
             Text(
-              'Lokasi Favorit Tersimpan',
-              style: Theme.of(context).textTheme.titleLarge,
+              'Lokasi favorit',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFF6F1E7),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 12),
         if (favorites.isEmpty)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+          CustomPaint(
+            painter: _DashedRectPainter(
+              color: const Color(0xFF374B7A),
+              strokeWidth: 1.2,
+              radius: 18,
+              gap: 5,
             ),
-            child: const Text(
-              'Belum ada lokasi favorit tersimpan.',
-              style: TextStyle(color: Colors.grey),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF223052),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      LucideIcons.bookmark,
+                      color: Color(0xFF8B99B5),
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Belum ada favorit. Ketuk ikon bookmark untuk menyimpan lokasi.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF8B99B5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         else
@@ -130,21 +248,52 @@ class _SearchScreenState extends State<SearchScreen> {
                 loc.country
               ].join(', ');
 
-              return Card(
-                color: isSelected ? const Color(0xFFE0F2FE) : Colors.white,
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFF2B3C66) : const Color(0xFF223052),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: isSelected ? const Color(0xFFF2B66D) : const Color(0xFF374B7A),
+                    width: isSelected ? 1.5 : 0.8,
+                  ),
+                ),
                 child: ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: Color(0xFFE0F7FA),
-                    child: Icon(Icons.location_city, color: Color(0xFF0288D1)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  leading: Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2B3C66),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      LucideIcons.mapPin,
+                      color: Color(0xFFF2B66D),
+                      size: 20,
+                    ),
                   ),
                   title: Text(
                     loc.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF2B66D),
+                      fontSize: 16,
+                    ),
                   ),
-                  subtitle: Text(region.isNotEmpty ? region : 'Lat: ${loc.latitude}, Lon: ${loc.longitude}'),
+                  subtitle: Text(
+                    region.isNotEmpty ? region : 'Lat: ${loc.latitude}, Lon: ${loc.longitude}',
+                    style: const TextStyle(
+                      color: Color(0xFFB0BDD6),
+                      fontSize: 13,
+                    ),
+                  ),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                    tooltip: 'Hapus dari Favorit',
+                    icon: const Icon(
+                      LucideIcons.bookmark,
+                      color: Color(0xFFF2B66D),
+                    ),
+                    tooltip: 'Hapus dari favorit',
                     onPressed: () {
                       viewModel.toggleFavorite(loc);
                     },
@@ -169,9 +318,26 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Hasil Pencarian',
-          style: Theme.of(context).textTheme.titleLarge,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Hasil pencarian',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFF6F1E7),
+              ),
+            ),
+            if (!viewModel.isSearching && viewModel.searchResults.isNotEmpty)
+              Text(
+                '${viewModel.searchResults.length} lokasi',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF8B99B5),
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 12),
 
@@ -179,24 +345,27 @@ class _SearchScreenState extends State<SearchScreen> {
           const Center(
             child: Padding(
               padding: EdgeInsets.all(24.0),
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Color(0xFFF2B66D),
+              ),
             ),
           )
         else if (viewModel.searchError != null)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.red.shade50,
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFF223052),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.error_outline, color: Colors.red),
+                const Icon(LucideIcons.cloudOff, color: Colors.redAccent),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     viewModel.searchError!,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.redAccent),
                   ),
                 ),
               ],
@@ -207,21 +376,36 @@ class _SearchScreenState extends State<SearchScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFF223052),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: const Color(0xFF374B7A),
+                width: 0.8,
+              ),
             ),
             child: const Column(
               children: [
-                Icon(Icons.search_off, size: 48, color: Colors.grey),
-                SizedBox(height: 8),
+                Icon(
+                  LucideIcons.search,
+                  size: 40,
+                  color: Color(0xFF8B99B5),
+                ),
+                SizedBox(height: 10),
                 Text(
-                  'Kota tidak ditemukan.',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  'Kota tidak ditemukan',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Color(0xFFF6F1E7),
+                  ),
                 ),
                 SizedBox(height: 4),
                 Text(
                   'Coba gunakan kata kunci nama kota yang lain.',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Color(0xFF8B99B5),
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
@@ -238,31 +422,101 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (loc.admin1 != null && loc.admin1!.isNotEmpty) loc.admin1!,
                 loc.country
               ].join(', ');
+              final coordString =
+                  '${loc.latitude.toStringAsFixed(2)}, ${loc.longitude.toStringAsFixed(2)}';
 
-              return Card(
-                child: ListTile(
-                  title: Text(
-                    loc.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF223052),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFF374B7A),
+                    width: 0.8,
                   ),
-                  subtitle: Text(
-                    '$region\nKoordinat: ${loc.latitude.toStringAsFixed(2)}, ${loc.longitude.toStringAsFixed(2)}',
-                    style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
-                  ),
-                  isThreeLine: true,
-                  trailing: IconButton(
-                    icon: Icon(
-                      isFav ? Icons.bookmark : Icons.bookmark_border,
-                      color: isFav ? Colors.amber : Colors.grey,
-                    ),
-                    onPressed: () {
-                      viewModel.toggleFavorite(loc);
-                    },
-                  ),
+                ),
+                child: InkWell(
                   onTap: () {
                     viewModel.selectLocation(loc);
                     Navigator.pop(context);
                   },
+                  child: Row(
+                    children: [
+                      // Kiri: Kotak Ikon Pin Lokasi (48x48)
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2B3C66),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          LucideIcons.mapPin,
+                          color: Color(0xFFF2B66D),
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+
+                      // Tengah: Info Kota, Wilayah, & Pill Badge Koordinat
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              loc.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFF2B66D),
+                              ),
+                            ),
+                            if (region.isNotEmpty) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                region,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFFB0BDD6),
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF172036),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                coordString,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF8B99B5),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Kanan: Tombol Bookmark
+                      IconButton(
+                        icon: Icon(
+                          LucideIcons.bookmark,
+                          color: isFav ? const Color(0xFFF2B66D) : const Color(0xFF8B99B5),
+                        ),
+                        onPressed: () {
+                          viewModel.toggleFavorite(loc);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -270,4 +524,52 @@ class _SearchScreenState extends State<SearchScreen> {
       ],
     );
   }
+}
+
+class _DashedRectPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double gap;
+  final double radius;
+
+  _DashedRectPainter({
+    required this.color,
+    this.strokeWidth = 1.0,
+    this.gap = 5.0,
+    this.radius = 18.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        Radius.circular(radius),
+      ));
+
+    const dashWidth = 6.0;
+    final dashGap = gap;
+
+    for (final PathMetric metric in path.computeMetrics()) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        final len = (distance + dashWidth < metric.length)
+            ? dashWidth
+            : metric.length - distance;
+        canvas.drawPath(
+          metric.extractPath(distance, distance + len),
+          paint,
+        );
+        distance += dashWidth + dashGap;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedRectPainter oldDelegate) => false;
 }

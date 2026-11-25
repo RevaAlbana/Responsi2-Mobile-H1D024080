@@ -16,7 +16,7 @@ class DailyForecastTile extends StatelessWidget {
       final now = DateTime.now();
 
       if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
-        return 'Hari Ini';
+        return 'Hari ini';
       }
 
       const dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
@@ -37,95 +37,81 @@ class DailyForecastTile extends StatelessWidget {
     final weatherIcon = WeatherCodeMapper.getIcon(forecast.weatherCode);
     final weatherDesc = WeatherCodeMapper.getDescription(forecast.weatherCode);
     final formattedDate = _formatDate(forecast.date);
+    final subtext = '$weatherDesc • ${forecast.precipitationProbabilityMax}%';
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            // Date & Condition description
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF223052),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: const Color(0xFF374B7A),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Kiri: Nama Hari & Deskripsi + Peluang Hujan
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFF6F1E7),
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  subtext,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF8B99B5),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+
+          // Kanan: Ikon Cuaca & Suhu Maks/Min
+          Row(
+            children: [
+              Icon(
+                weatherIcon,
+                color: const Color(0xFFF2B66D),
+                size: 28,
+              ),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    formattedDate,
+                    '${forecast.temperature2mMax.round()}°',
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E293B),
+                      color: Color(0xFFF6F1E7),
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    weatherDesc,
-                    style: TextStyle(
+                    '${forecast.temperature2mMin.round()}°',
+                    style: const TextStyle(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: Color(0xFF8B99B5),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-            ),
-
-            // Icon & Rain Probability
-            Row(
-              children: [
-                Icon(
-                  weatherIcon,
-                  color: const Color(0xFF0288D1),
-                  size: 28,
-                ),
-                const SizedBox(width: 8),
-                if (forecast.precipitationProbabilityMax > 0) ...[
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.water_drop,
-                        size: 14,
-                        color: Colors.blueAccent,
-                      ),
-                      Text(
-                        '${forecast.precipitationProbabilityMax}%',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 12),
-                ],
-              ],
-            ),
-
-            // Min & Max Temperature
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${forecast.temperature2mMax.round()}°C',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
-                  ),
-                ),
-                Text(
-                  '${forecast.temperature2mMin.round()}°C',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

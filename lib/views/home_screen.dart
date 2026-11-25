@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/weather_viewmodel.dart';
 import '../widgets/current_weather_card.dart';
@@ -18,13 +19,35 @@ class HomeScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(location?.name ?? 'Responsi Cuaca'),
+            backgroundColor: const Color(0xFF172036),
+            centerTitle: false,
+            title: Row(
+              children: [
+                const Icon(
+                  LucideIcons.mapPin,
+                  color: Color(0xFFF2B66D),
+                  size: 22,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    location?.name ?? 'Responsi Cuaca',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF6F1E7),
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
             actions: [
               if (location != null)
                 IconButton(
                   icon: Icon(
-                    isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                    color: isFavorite ? Colors.amberAccent : Colors.white,
+                    LucideIcons.bookmark,
+                    color: isFavorite ? const Color(0xFFF2B66D) : const Color(0xFFF6F1E7),
                   ),
                   tooltip: isFavorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit',
                   onPressed: () {
@@ -32,7 +55,10 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
               IconButton(
-                icon: const Icon(Icons.search),
+                icon: const Icon(
+                  LucideIcons.search,
+                  color: Color(0xFFF6F1E7),
+                ),
                 tooltip: 'Cari Lokasi',
                 onPressed: () {
                   Navigator.push(
@@ -57,11 +83,13 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              color: Color(0xFFF2B66D),
+            ),
             SizedBox(height: 16),
             Text(
               'Memuat data cuaca...',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: 16, color: Color(0xFF8B99B5)),
             ),
           ],
         ),
@@ -76,25 +104,33 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.error_outline,
+                LucideIcons.cloudOff,
                 size: 64,
                 color: Colors.redAccent,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Terjadi Kesalahan',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF6F1E7),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 viewModel.weatherError!,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Color(0xFF8B99B5)),
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2B66D),
+                  foregroundColor: const Color(0xFF172036),
+                ),
                 onPressed: () => viewModel.fetchWeather(),
-                icon: const Icon(Icons.refresh),
+                icon: const Icon(LucideIcons.refreshCw),
                 label: const Text('Coba Lagi'),
               ),
             ],
@@ -111,22 +147,30 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.cloud_off,
+                LucideIcons.cloudOff,
                 size: 64,
-                color: Colors.grey,
+                color: Color(0xFF8B99B5),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Belum Ada Data Cuaca',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF6F1E7),
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
                 'Silakan cari dan pilih kota terlebih dahulu.',
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Color(0xFF8B99B5)),
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2B66D),
+                  foregroundColor: const Color(0xFF172036),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -135,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.search),
+                icon: const Icon(LucideIcons.search),
                 label: const Text('Cari Kota'),
               ),
             ],
@@ -151,6 +195,8 @@ class HomeScreen extends StatelessWidget {
         : 0;
 
     return RefreshIndicator(
+      color: const Color(0xFFF2B66D),
+      backgroundColor: const Color(0xFF223052),
       onRefresh: () async {
         await viewModel.fetchWeather();
       },
@@ -164,10 +210,14 @@ class HomeScreen extends StatelessWidget {
               location: location,
               currentWeather: weather.current,
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Detail Cuaca Hari Ini',
-              style: Theme.of(context).textTheme.titleLarge,
+            const SizedBox(height: 24),
+            const Text(
+              'Detail hari ini',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFF6F1E7),
+              ),
             ),
             const SizedBox(height: 12),
             WeatherMetricsGrid(
@@ -176,9 +226,13 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             if (weather.daily.isNotEmpty) ...[
-              Text(
-                'Prakiraan Cuaca Harian',
-                style: Theme.of(context).textTheme.titleLarge,
+              const Text(
+                'Prakiraan harian',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF6F1E7),
+                ),
               ),
               const SizedBox(height: 12),
               ListView.builder(
